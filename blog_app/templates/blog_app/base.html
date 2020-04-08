@@ -2,24 +2,29 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous" async></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous" async></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous" async></script>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
     <link rel="stylesheet" type="text/css" href="{% static 'blog_app/main.css' %}">
     {% if title %}
         <title>Django Blog - {{ title }}</title>
     {% else %}
         <title>Zyarra's Blog</title>
     {% endif %}
-  </head>
+    <link rel="shortcut icon" href="{%  static 'favicon.ico' %}">
 
+  </head>
   <body>
+        <div></div>
     <div class="container">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
       <a class="navbar-brand" href="{%  url 'blog_home' %}">Zyarra's Blog</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -32,17 +37,23 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'blog_about' %}">About</a>
           </li>
-
           <div class="navbar-nav">
             {% if user.is_authenticated%}
             <a class="nav-item nav-link" href="{% url 'post_create' %}">New Post</a>
             <a class="nav-item nav-link" href="{% url 'logout' %}">Log out</a>
             <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+            {% if user.is_superuser %}
+            <a class="nav-item nav-link" href="http://zyarra.pythonanywhere.com/admin">Admin</a>
+            <form class="navbar bg-primary" method="POST" action="{% url 'scrape-nltimes' %}">
+                {%  csrf_token %}
+                         <input type="text" name="sub-site" placeholder="https://nltimes.nl/">
+            </form>
+            <a class="nav-item nav-link" href="{% url 'upload-data' %}">Upload Data</a>
+            {%  endif %}
             {% else %}
             <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
             <a class="nav-item nav-link" href="{% url 'login' %}">Log in</a>
             {% endif %}
-
           </div>
         </ul>
       </div>
@@ -60,14 +71,20 @@
             {% block content %}{% endblock %}
           </div>
           <div class="col-md-4">
-            <div class="content-section">
-              <h3>Our Sidebar</h3>
-              <p class='text-muted'>This item is disabled
+            <div class="make-me-sticky">
                 <ul class="list-group">
-                  <li class="list-group-item list-group-item-light"><a href="">Latest Posts</a></li>
-                  <li class="list-group-item list-group-item-light"><a href="">Announcements</a></li>
-                  <li class="list-group-item list-group-item-light">Calendars</li>
-                  <li class="list-group-item list-group-item-light">etc</li>
+                  <li class="list-group-item list-group-item-light"><a href=""><b>Latest Posts</a></li></b>
+                <ul>
+                    {%  for post in posts|slice:'3' %}
+                    <img class="img-fluid" alt="Responsive image" src="{{ post.image.url }}">
+                    <li class="list-group-item"><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></li>
+                    {%  endfor %}
+                </ul>
+                  <li class="list-group-item list-group-item-light"><a href=""><b>Announcements</a></li></b>
+                    <ul>
+                        <li class="list-group-item list-group-item-light"><a href=""http://zyarra.pythonanywhere.com/">Its beta but its up and running!</a></li>
+                    </ul>
+{#                  <li class="list-group-item list-group-item-light">Calendars</li>#}
                 </ul>
               </p>
             </div>
@@ -75,11 +92,8 @@
         </div>
       </div>
         </main>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+     <div id="fb-root"></div>
+        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/hu_HU/sdk.js#xfbml=1&version=v6.0"></script>
   </body>
 </html>
 

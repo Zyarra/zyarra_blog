@@ -1,19 +1,16 @@
 {% extends 'blog_app/base.html' %}
 {% load crispy_forms_tags %}
-
 {% block content %}
 <div class="content-section">
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset class="form-group">
-
-            <legend class="border-bottom mb-4">Edit post</legend>
-            {{ form|crispy }}
+            <legend class="border-bottom mb-4"><b>{{post.title}}</legend></b>
+        {{ form|crispy }}
         </fieldset>
         <div class="form-group">
-            <button class="btn btn-outline-danger" type="submit">Post now</button>
-            <a class="btn btn-outline-success" href="{% url 'blog_home' %}">Cancel</a>
-
+            <button class="btn btn-danger" type="submit">Post now</button>
+            <a class="btn btn-success" href="{% url 'blog_home' %}">Cancel</a>
         </div>
     </form>
 </div>

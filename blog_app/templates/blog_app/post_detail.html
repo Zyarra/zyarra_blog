@@ -3,47 +3,48 @@
 
 {% block content %}
     <article class="media content-section">
-          <img class="rounded-circle article-img" src=" {{object.author.profile.image.url }}">
-
-      <div class="media-body">
+    <img class="rounded-circle article-img" src=" {{object.author.profile.image.url }}">
+    <div class="media-body">
         <div class="article-metadata">
           <a class="mr-2" href="{% url 'user_posts' object.author.username %}">{{ post.author }}</a>
           <small class="text-muted">{{ object.created_on|date:"F d, Y" }}</small>
-            {% if object.author == user %}
+            {% if object.author == user or user.is_superuser %}
             <div>
                 <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'post_update' object.id %}">Update post</a>
                 <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post_delete' object.id %}">Delete post</a>
             </div>
             {% endif %}
         </div>
-        <h2 class="article-title">{{ object.title }}</h2>
-        <p class="article-content">{{ object.content }}</p>
-          <div>
-              <hr>
-              <a class="btn btn-info" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
+        <h3 class="article-title">{{ object.title }}</h3>
+            {% if post.image %}
+                <img class="img-fluid" alt="Responsive image" src="{{ post.image.url }}">
+            {% endif %}
+            <p class="article-content">{{ object.content }}</p>
+            <div>
 
-                   {% for comment in post.comments.all %}
-                        {% if comment.approved_comment %}
-                        <div class="comment">
-                            <div class="date">
-                                {{ comment.created_date }}
-                                {% if not comment.approved_comment %}
-                                    <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-                                    <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
-                                {% endif %}
+
+
+              <hr>
+              <a style = "position:absolute; right :40px;"  class="btn btn-primary btn-sm" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
+                <div class="fb-like" data-href="http://zyarra.pythonanywhere.com" data-width="" data-layout="button_count" data-action="like" data-size="large" data-share="true"></div>
+                    {% for comment in post.comments.all %}
+                        {% if user.is_authenticated or comment.approved_comment %}
+                            <div class="comment">
+                                <div class="date">
+                                    {{ comment.created_date }}
+                                        <a class="btn btn-default" href="{%url 'comment_remove' pk=comment.pk %}"><button type="button" class="btn btn-danger">Remove</button </span></a>
+                                            {% if not comment.approved_comment and user.is_superuser %}
+                                                <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"><button type="button" class="btn btn-success">Approve</button></span></a>
+                                            {% endif %}
+                                </div>
+                                <strong>{{ comment.author }}</strong>
+                                <p>{{ comment.text|linebreaks }}</p>
                             </div>
-                            <strong>{{ comment.author }}</strong>
-                            <p>{{ comment.text|linebreaks }}</p>
-                        </div>
                         {% endif %}
-                    {% empty %}
+                        {% empty %}
                         <p>No comments here yet :(</p>
                     {% endfor %}
-
-          </div>
+            </div>
     </article>
-
-
-
 {% endblock content %}
 

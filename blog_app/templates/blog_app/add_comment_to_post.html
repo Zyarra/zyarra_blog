@@ -1,8 +1,9 @@
 {% extends 'blog_app/base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
-    <h1>New comment</h1>
+    <h3>New comment</h3>
     <form method="POST" class="post-form">{% csrf_token %}
-        {{ form.as_p }}
+        {{ form|crispy }}
         <button class="btn btn-info" type="submit" class="save btn btn-default">Send</button>
     </form>
 {% endblock %}
