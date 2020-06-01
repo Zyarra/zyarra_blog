@@ -59,6 +59,16 @@ def scrape_site(web_address='https://nltimes.nl/categories/entertainment'):
     csv_file.close()
     os.chdir(x)
 
+
+
+
+
+
+
+
+
+
+
 def upload_data():
     x = os.getcwd()
     os.chdir('C:/Users/feren/PycharmProjects/django_env/django_prj/media/post_images')

@@ -22,7 +22,6 @@
 
   </head>
   <body>
-        <div></div>
     <div class="container">
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
       <a class="navbar-brand" href="{%  url 'blog_home' %}">Zyarra's Blog</a>
@@ -76,15 +75,16 @@
                   <li class="list-group-item list-group-item-light"><a href=""><b>Latest Posts</a></li></b>
                 <ul>
                     {%  for post in posts|slice:'3' %}
-                    <img class="img-fluid" alt="Responsive image" src="{{ post.image.url }}">
+                        <div class="sidebar-image">
+                    <img class="img-fluid img-thumbnail" src="{{ post.image.url }}">
                     <li class="list-group-item"><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></li>
+                        </div>
                     {%  endfor %}
                 </ul>
                   <li class="list-group-item list-group-item-light"><a href=""><b>Announcements</a></li></b>
                     <ul>
                         <li class="list-group-item list-group-item-light"><a href=""http://zyarra.pythonanywhere.com/">Its beta but its up and running!</a></li>
                     </ul>
-{#                  <li class="list-group-item list-group-item-light">Calendars</li>#}
                 </ul>
               </p>
             </div>
@@ -96,10 +96,3 @@
         <script async defer crossorigin="anonymous" src="https://connect.facebook.net/hu_HU/sdk.js#xfbml=1&version=v6.0"></script>
   </body>
 </html>
-
-
-
-
-
-
-

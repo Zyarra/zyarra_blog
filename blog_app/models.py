@@ -22,8 +22,6 @@ class Post(models.Model):
         return self.title
 
 
-
-
     def save(self, *args, **kwargs):
         super().save()
 
@@ -32,7 +30,6 @@ class Post(models.Model):
             output_size = (640, 480)
             img.thumbnail(output_size)
             img.save(self.image.path)
-
 
 
 class Comment(models.Model):

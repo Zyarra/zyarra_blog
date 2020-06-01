@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 from .views import AboutView, PostCreateView, PostUpdateView, PostDeleteView, PostDetailView
@@ -15,5 +15,9 @@ urlpatterns = [
     path('comment/<int:pk>/approve/', views.comment_approve, name='comment_approve'),
     path('comment/<int:pk>/remove/', views.comment_remove, name='comment_remove'),
     path('scrape/', views.scrape_nltimes, name='scrape-nltimes'),
-    path('upload/', views.upload_data, name='upload-data')
+    path('upload/', views.upload_data, name='upload-data'),
+    path('', include('social_django.urls', namespace='social')),
+    path('manage/', views.manage, name='manage'),
+
+
 ]

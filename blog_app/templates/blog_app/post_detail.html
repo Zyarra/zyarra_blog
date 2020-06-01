@@ -21,14 +21,11 @@
             {% endif %}
             <p class="article-content">{{ object.content }}</p>
             <div>
-
-
-
               <hr>
               <a style = "position:absolute; right :40px;"  class="btn btn-primary btn-sm" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
                 <div class="fb-like" data-href="http://zyarra.pythonanywhere.com" data-width="" data-layout="button_count" data-action="like" data-size="large" data-share="true"></div>
                     {% for comment in post.comments.all %}
-                        {% if user.is_authenticated or comment.approved_comment %}
+                        {% if user.is_superuser or comment.approved_comment %}
                             <div class="comment">
                                 <div class="date">
                                     {{ comment.created_date }}
@@ -38,7 +35,7 @@
                                             {% endif %}
                                 </div>
                                 <strong>{{ comment.author }}</strong>
-                                <p>{{ comment.text|linebreaks }}</p>
+                                <p class="approved-comment">{{ comment.text|linebreaks }}</p>
                             </div>
                         {% endif %}
                         {% empty %}

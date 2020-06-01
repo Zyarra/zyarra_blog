@@ -29,6 +29,16 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+AUTHENTICATION_BACKENDS = ('social_core.backends.google.GoogleOAuth2', 'django.contrib.auth.backends.ModelBackend',)
+
+
+LOGIN_URL = '/auth/login/google-oauth2/'
+
+LOGIN_REDIRECT_URL = '/manage/'
+LOGOUT_REDIRECT_URL = '/'
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,6 +49,9 @@ INSTALLED_APPS = [
     'blog_app',
     'users',
     'crispy_forms',
+    'social_django',
+
+
 ]
 
 MIDDLEWARE = [
@@ -138,3 +151,9 @@ EMAIL_USE_TLS = True
 #### TO BE CHANGED ####
 EMAIL_HOST_USER = 'ferenc.lippai@gmail.com'
 EMAIL_HOST_PASSWORD = 'tsnmxcfjrfwazvei'
+
+# Social AUTH
+try:
+    from .local_settings import *
+except ImportError:
+    pass

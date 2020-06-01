@@ -55,10 +55,11 @@ class PostUpdateView(UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         post = self.get_object()
-        if self.request.user == post.author:
+        if self.request.user == post.author or self.request.user.is_superuser:
             return True
         else:
             return False
+
 
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -67,7 +68,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         post = self.get_object()
-        if self.request.user == post.author:
+        if self.request.user == post.author or self.request.user.is_superuser:
             return True
         else:
             return False
@@ -107,8 +108,6 @@ def comment_remove(request, pk):
 def scrape_nltimes(request):
 
     nltimes_subsite = request.POST['sub-site']
-
-    print(nltimes_subsite)
     from .utils import scrape
     scrape.scrape_site(web_address=nltimes_subsite)
 
@@ -122,3 +121,6 @@ def upload_data(request):
     scrape.upload_data()
 
     return redirect('blog_home')
+
+def manage(request):
+    return render(request, 'blog_app/manage.html')
